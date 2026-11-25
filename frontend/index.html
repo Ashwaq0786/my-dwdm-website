@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TrekSmart | Intelligent Trekking Assistant</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet map library -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="main-header">
+    <a href="index.html" class="logo">
+    🏔️ TrekSmart
+</a>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#destinations">Destinations</a>
+        <a href="#recommend">Recommendations</a>
+        <a href="#live-assistance">Live Assistance</a>
+        <a href="#analytics">Analytics</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <span class="hero-tag">EXPLORE • DISCOVER • EXPERIENCE</span>
+
+        <h1>Your Next Adventure<br>Starts Here.</h1>
+
+        <p>
+            Discover trekking destinations, plan your journey
+            and find nearby assistance while exploring nature.
+        </p>
+
+        <button onclick="exploreTreks()">
+            Explore Destinations →
+        </button>
+
+        <a href="#live-assistance" class="hero-secondary">
+            Explore Live Assistance
+        </a>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+    <h2>Explore Nature with Confidence</h2>
+
+    <p>
+        TrekSmart is an intelligent trekking recommendation and
+        trip planning system designed to help trekkers discover
+        destinations, plan trips and locate nearby facilities.
+    </p>
+</section>
+
+<!-- DESTINATIONS -->
+<section class="destinations" id="destinations">
+
+    <h2>Discover Trekking Destinations</h2>
+
+    <p>Explore trekking locations across South India.</p>
+
+    <div class="filters">
+
+        <select id="stateFilter">
+            <option value="">All States</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+        </select>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search a trekking destination..."
+        >
+
+        <button onclick="loadTreks()">Search Treks</button>
+
+    </div>
+
+    <p id="trekCount">Loading trekking destinations...</p>
+
+    <div class="cards" id="trekCards"></div>
+
+</section>
+
+<!-- SMART RECOMMENDATIONS -->
+<section class="recommend-section" id="recommend">
+
+    <span class="section-tag">SMART DISCOVERY</span>
+
+    <h2>🤖 Intelligent Trek Recommendations</h2>
+
+    <p>Find trekking destinations based on your preferences.</p>
+
+    <div class="filters">
+
+        <select id="recommendState">
+            <option value="">All States</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+        </select>
+
+        <select id="recommendSeason">
+            <option value="">Any Season</option>
+            <option value="Oct-Feb">October - February</option>
+            <option value="Mar-May">March - May</option>
+            <option value="Jun-Sep">June - September</option>
+        </select>
+
+        <button onclick="getRecommendations()">
+            Find My Trek
+        </button>
+
+    </div>
+
+    <div id="recommendResults"></div>
+
+</section>
+
+<!-- LIVE TREKKING ASSISTANCE -->
+<section class="live-section" id="live-assistance">
+
+    <span class="section-tag">TREK SMART • STAY SAFE</span>
+
+    <h2>Live Trekking Assistance</h2>
+
+    <p>
+        Find nearby facilities and assistance during your
+        trekking journey.
+    </p>
+
+    <div class="location-panel">
+
+        <div>
+            <h3>📍 Your Current Location</h3>
+            <p id="locationStatus">
+                Allow location access to find nearby services.
+            </p>
+        </div>
+
+        <button id="locateMeBtn" type="button">
+            Find My Location
+        </button>
+
+    </div>
+
+    <!-- LIVE MAP -->
+    <div class="map-container">
+
+        <div class="map-heading">
+            <h3>Explore Nearby Places</h3>
+            <p>View your location and nearby facilities on the map.</p>
+        </div>
+
+        <div id="trekMap"></div>
+
+    </div>
+
+    <!-- NEARBY FILTERS -->
+    <div class="nearby-panel">
+
+        <h3>Find Nearby Services</h3>
+
+        <div class="nearby-buttons">
+
+            <button class="nearby-filter" data-type="hospital">
+                🏥 Hospitals
+            </button>
+
+            <button class="nearby-filter" data-type="pharmacy">
+                💊 Medical Shops
+            </button>
+
+            <button class="nearby-filter" data-type="restaurant">
+                🍽️ Restaurants
+            </button>
+
+            <button class="nearby-filter" data-type="supermarket">
+                🛒 Grocery Shops
+            </button>
+
+            <button class="nearby-filter" data-type="hotel">
+                🏨 Hotels
+            </button>
+
+            <button class="nearby-filter" data-type="fuel">
+                ⛽ Fuel Stations
+            </button>
+
+        </div>
+
+        <div id="nearbyResults">
+            <p>Nearby places will appear here after location access.</p>
+        </div>
+
+    </div>
+
+    <!-- EMERGENCY -->
+    <div class="emergency-panel">
+
+        <div>
+            <h3>🚨 Emergency Assistance</h3>
+
+            <p>
+                Need urgent help? Use India's emergency
+                response number.
+            </p>
+
+            <strong>Emergency Number: 112</strong>
+        </div>
+
+        <a href="tel:112" class="emergency-button">
+            Call Emergency 112
+        </a>
+
+    </div>
+
+    <p class="safety-note">
+        Location and nearby-service information require internet
+        access and location permission. Always follow local forest
+        department instructions and official trail safety guidance.
+    </p>
+
+</section>
+
+<!-- ANALYTICS -->
+<section class="analytics-section" id="analytics">
+
+    <span class="section-tag">DATA INSIGHTS</span>
+
+    <h2>📊 Trekking Analytics Dashboard</h2>
+
+    <p>Explore insights generated from our trekking dataset.</p>
+
+    <div class="analytics-cards">
+
+        <div class="analytics-card">
+            <h3 id="totalTreks">0</h3>
+            <p>Total Treks</p>
+        </div>
+
+        <div class="analytics-card">
+            <h3 id="totalStates">0</h3>
+            <p>Total States</p>
+        </div>
+
+        <div class="analytics-card">
+            <h3 id="moderateTreks">0</h3>
+            <p>Moderate Treks</p>
+        </div>
+
+        <div class="analytics-card">
+            <h3 id="permitTreks">0</h3>
+            <p>Permit Required</p>
+        </div>
+
+    </div>
+
+    <h3>State-wise Trekking Distribution</h3>
+
+    <div id="stateAnalytics"></div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <h2>🏔️ TrekSmart</h2>
+
+    <p>
+        Explore More. Trek Smarter. Stay Safer.
+    </p>
+
+    <p>
+        © 2026 TrekSmart | Intelligent Trekking
+        Recommendation and Trip Planning System
+    </p>
+</footer>
+
+<!-- LIBRARIES AND PROJECT JAVASCRIPT -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
